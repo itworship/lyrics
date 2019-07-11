@@ -1,0 +1,90 @@
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Lyrics</title>
+  </head>
+  <body>
+    
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            const lineBreakReg = new RegExp("\n", 'g')
+            $.ajax({
+        
+                url:"https://script.google.com/macros/s/AKfycbzwlj2DfEV8D8s1KvBFZLwfShG4YeHBDvUe7ALvxwfA6zBl10M/exec",
+                method:"GET",
+                success:function(data, status){
+                    var lyrics = JSON.parse(data);
+                    // console.log("Data: " + lyrics[0].title + "\nStatus: " + status)
+                    let allCards = ""
+                    for (let i = 0; i < lyrics.length; i++) {
+                        const lyricsObj = lyrics[i];
+                        let title = lyricsObj.title;
+                        let content = lyricsObj.content? lyricsObj.content.replace(/\n/g, "<br>") : "";
+                        let innerHtml = `
+                        <div class="card">
+                            <div class="card-header" id="heading-${i}">
+                                <h2 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-${i}" aria-expanded="${i==0?"true":"false" }" aria-controls="collapse-${i}">
+                                    ${title}
+                                </button>
+                                </h2>
+                            </div>
+                        
+                            <div id="collapse-${i}" class="collapse${i==0?" show":"" }" aria-labelledby="heading-${i}" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    ${content}
+                                </div>
+                            </div>
+                        </div>`
+                        allCards += innerHtml;
+                    }
+                    $("#loading-dialog").hide();
+                    $( "#accordionExample" ).append( allCards );
+                }
+        
+            });
+          
+        });
+    </script>
+    <div style="width: 100%; background-color: blueviolet; padding: 1em">
+        <h2 style="color:white">Lyrics</h2>
+    </div>
+    <div class="container">
+        <div class="accordion" id="accordionExample" style="margin-top: 1em; margin-bottom: 1em">
+         
+        </div>
+
+        
+            
+
+        
+    </div>
+    <div style="top: 50%; position: absolute; width:100%; text-align: center;" id="loading-dialog">
+        <div class="spinner-grow text-danger" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="spinner-grow text-info" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+  </body>
+</html>
